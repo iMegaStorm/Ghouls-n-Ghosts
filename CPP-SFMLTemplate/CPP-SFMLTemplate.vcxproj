@@ -84,11 +84,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Animation.cpp" />
+    <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Enemies.cpp" />
     <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Player.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Animation.h" />
+    <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Enemies.h" />
     <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Player.h" />
     <ClInclude Include="Initialise.h" />
   </ItemGroup>

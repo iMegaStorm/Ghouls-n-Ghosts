@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Animation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Enemies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Initialise.h">
@@ -33,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Enemies.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

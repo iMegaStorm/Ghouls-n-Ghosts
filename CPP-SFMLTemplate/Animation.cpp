@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include <iostream>
 
 
 Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime)
@@ -26,12 +27,25 @@ void Animation::Update(int row, float deltaTime, bool faceRight)
 	{
 		totalTime -= switchTime;
 		currentImage.x++;
-
-		if(currentImage.x >= imageCount.x)
+		
+		if (currentImage.x > 5)
 		{
 			currentImage.x = 0;
 		}
+		//else if(currentImage.x >= 3 && row == 0)
+		//{
+		//	currentImage.x = 0;
+		//}
+		//else if (currentImage.x >= 4 && row == 2)
+		//{
+		//	currentImage.x = 0;
+		//}
+		//else if (currentImage.x >= 3 && row == 4)
+		//{
+		//	currentImage.x = 0;
+		//}
 	}
+	std::cout << currentImage.x << std::endl;
 
 	uvRect.top = currentImage.y * uvRect.height;
 

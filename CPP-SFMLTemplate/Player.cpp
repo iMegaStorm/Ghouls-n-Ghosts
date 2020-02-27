@@ -9,6 +9,7 @@ Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, 
 		faceRight = true;
 
 		mainCharacter.setSize(sf::Vector2f(94.0f,120.0f));
+		mainCharacter.setOrigin(50/2,37/2);
 		mainCharacter.setPosition(x, y);
 		mainCharacter.setTexture(texture);
 }
@@ -20,14 +21,16 @@ Player::~Player(void)
 
 void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed) 
 {
+	
+	//Local Variables
 	sf::Vector2f movement(0.0f, 0.0f);
 	bool cantMove = false;
 	
-		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{
 				movement.x -= speed * deltaTime;
 		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		{
 		if(!cantMove)
 			{
@@ -37,9 +40,7 @@ void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCou
 		//else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W));
 			//movement.y -= speed * deltaTime;
 		
-
-
-		if(movement.x == 0.0f)
+	if(movement.x == 0.0f)
 		{
 			row = 0;	
 			cantMove = true;
@@ -47,17 +48,18 @@ void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCou
 		else
 		{
 			row = 1;
-
-			if (movement.x > 0.0f)
-			{
-				faceRight = true;
-				cantMove = false;
-			}
-			else
-			{
-				faceRight = false;
-			}
 		}
+
+	if (movement.x > 0.0f)
+		{
+			faceRight = true;
+			cantMove = false;
+		}
+		else
+		{
+			faceRight = false;
+		}
+
 		
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && cantMove)
 		{
@@ -76,59 +78,33 @@ void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCou
 			}
 
 		}
-		/*else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T) && cantMove)
-		{
-			row = 3;
-		}*/
+
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		{
-			//sf::Vector2u imageCount(4,5);
 			if(movement.x == 0.0f)
 			{
-				//Player player(texture, sf::Vector2u(6-2,5), 0.3f, 100.0f, x, y);
 				row = 4;
-				
 			}
 		}
-		/*else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift) && cantMove)
-		{
-			row = 5;
-		}*/
+	
 		animation.Update(row, deltaTime, faceRight);
 		mainCharacter.setTextureRect(animation.uvRect);
 		mainCharacter.move(movement);
 }
-
-void Crouch ()
+void Player::Jump(float velocity)
 {
-
+	//Main "Jump()"
 
 }
 
-void Camera(sf::RenderWindow& window, float x, float y)
+bool Player::intersects(sf::Sprite sprite, int type, bool powerUpDisplay)
 {
-	sf::View cameraView;
-
-	cameraView.reset (sf::FloatRect(0, 0, 300, 120));
-	cameraView.setCenter(x,  y);
-
-	if (x <= 5 * 32) 
-			{
-			
-				cameraView.setCenter(150, y);
-			}
-			else if (x >= 17 * 32) 
-			{
-				cameraView.setCenter(550, y);
-			}
-		
-		window.setView(cameraView);
-
-}
-
-void Player::intersects(sf::Sprite sprite, int type)
-{
-	if(mainCharacter.getGlobalBounds().intersects(sprite.getGlobalBounds())) powerUp = type;
+	if(mainCharacter.getGlobalBounds().intersects(sprite.getGlobalBounds())) 
+	{
+			powerUp = type;
+			return true;
+	}
+	return false;
 }
 
 void Player::Draw(sf::RenderWindow& window)
