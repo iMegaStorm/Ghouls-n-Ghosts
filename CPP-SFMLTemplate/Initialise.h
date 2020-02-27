@@ -7,7 +7,7 @@
 using namespace sf;
 using namespace std;
 
-class LoadAssets
+class Initialise
 {
 	list<Texture> TextureList; //Declare a texture list
 
@@ -16,7 +16,7 @@ public:
 
 };
 
-Sprite LoadAssets::LoadSpriteFromTexture(string Path, string Name, string Extension) 
+Sprite Initialise::LoadSpriteFromTexture(string Path, string Name, string Extension) 
 {
 	Texture Texture;
 	if(!Texture.loadFromFile(Path + Name + "." + Extension)) //Loads a texture from file, //Assets/FileName/.Extension

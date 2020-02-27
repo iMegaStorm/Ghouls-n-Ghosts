@@ -18,9 +18,21 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="loadAssets.h">
+    <ClInclude Include="Initialise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Ghouls %27n Ghosts\CPP-SFMLTemplate\Animation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
