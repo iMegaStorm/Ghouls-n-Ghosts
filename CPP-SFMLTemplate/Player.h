@@ -10,14 +10,13 @@ public:
 	float y;
 
 public:
-	Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float x, float y);
+	Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f Position, float Mass);
 	~Player(void);
 
 	void Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed);
 	void Jump (float velocity);
 	void Draw(sf::RenderWindow& window);
 	bool intersects(sf::Sprite sprite, int type, bool powerUpDisplay);
-
 	sf::Vector2f GetPosition() { return mainCharacter.getPosition(); }
 
 public:
@@ -28,6 +27,14 @@ public:
 	int jumpCount;
 	int powerUp;
 	bool faceRight;
+
+	sf::Sprite mainCharacterSprite;
+	sf::Vector2f mainCharacterPosition;
+	int JumpCount;
+	float mainCharacterMass;
+	float mainCharacterVelocity;
+	bool mainCharacterOnGround;
+	float mainCharacterGravity;
 
 };
 

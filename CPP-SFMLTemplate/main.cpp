@@ -9,10 +9,10 @@
 using namespace std;
 
 RenderWindow window(VideoMode(800, 600), "Ghouls 'n Ghosts"); // 13 squares wide, 9 square high
-sf::View view(sf::Vector2f(0.0f,0.0f), sf::Vector2f(800, 600));
+sf::View view;
+
 
 Initialise init;
-//mainCharacter gameCharacter;
 
 //Game Screen Variables
 	//Assigns a value for each screen
@@ -29,8 +29,9 @@ int offsetY = 0;
 Vector2i MouseCursorLocation(0,0);
 
 sf::Vector2f fireBallLocation(10,520);
+sf::Vector2f arrowLocation(10,520);
 
-bool fireBallBool = false;
+bool powerUp = false;
 
 
 void drawDebugLayout(int playField[20][50]) {
@@ -78,24 +79,23 @@ void Input (float speed, int offsetX, int offsetY, Sprite &fireBall)
 	//	gameCharacter.Move(50.0f * speed, 0);
 	//	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //The <Control> Keyboard Key Is Pressed...
-		{
-		fireBallBool = true;
-		//fireBallLocation.x = fireBallLocation.x + 20;
-		//fireBallLocation.y = fireBallLocation.y + 16;
-		//fireBall.setPosition(fireBallLocation.x,fireBallLocation.y);
-		}
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //The <Control> Keyboard Key Is Pressed...
+	//	{
+	//	fireBallBool = true;
+	//	fireBallLocation.x = player.x + 20;
+	//	fireBallLocation.y = fireBallLocation.y + 16;
+	//	fireBall.setPosition(fireBallLocation.x,fireBallLocation.y);
+	//	}
 }
 
-
-void Init (Sprite &gameScreen, Sprite &playButton, Sprite &exitButton, Sprite &startButton, Sprite &instructionMenu,Sprite &background, 
-Sprite &healthPotion, Sprite &chest, Sprite &grass, Sprite &fireBall, Sprite &swordPowerUp, Sprite &spellPowerUp, Sprite &bowPowerUp)
+void Init (Sprite &gameScreen, Sprite &playButton, Sprite &exitButton, Sprite &startButton, Sprite &instructionMenu,Sprite &background, Sprite &health,
+Sprite &healthPotion, Sprite &chest, Sprite &grass, Sprite &fireBall, Sprite &arrow, Sprite &swordPowerUp, Sprite &spellPowerUp, Sprite &bowPowerUp)
 {
 	gameScreen = init.LoadSpriteFromTexture("Assets/Menus/", "GameScreen", "png");
 
 	instructionMenu = init.LoadSpriteFromTexture("Assets/Menus/", "InstructionsMenu", "png");
 
-	background = init.LoadSpriteFromTexture("Assets/Menus/", "BackGround2", "png");
+	background = init.LoadSpriteFromTexture("Assets/Menus/", "BackGround", "png");
 	background.setPosition(0,-28);
 
 	playButton = init.LoadSpriteFromTexture("Assets/Menus/", "playButton", "png");
@@ -109,27 +109,33 @@ Sprite &healthPotion, Sprite &chest, Sprite &grass, Sprite &fireBall, Sprite &sw
 	startButton = init.LoadSpriteFromTexture("Assets/Menus/", "startButton", "png");
 	startButton.setOrigin (100.0/2, 42.0/2);
 	startButton.setPosition (400, 550);
+
+	health = init.LoadSpriteFromTexture("Assets/Objects/", "Health", "png");
+	health.setPosition(50, 50);
 	
-	healthPotion = init.LoadSpriteFromTexture("Assets/", "HealthPotion", "png");
+	healthPotion = init.LoadSpriteFromTexture("Assets/Objects/", "HealthPotion", "png");
 	healthPotion.setPosition (400, 544);
 
-	chest = init.LoadSpriteFromTexture("Assets/", "chest", "png");
+	chest = init.LoadSpriteFromTexture("Assets/Objects/", "chest", "png");
 	chest.setScale(3, 3);
 	chest.setPosition (450, 527);
 
 	grass = init.LoadSpriteFromTexture("Assets/Menus/", "placeHolderTileset", "png");
 
-	fireBall = init.LoadSpriteFromTexture("Assets/weaponAnimations/", "Frame1", "png");
+	fireBall = init.LoadSpriteFromTexture("Assets/WeaponAnimations/", "Frame1", "png");
 	fireBall.setScale(0.2, 0.2);
 
-	swordPowerUp = init.LoadSpriteFromTexture("Assets/", "SwordPowerUp", "png");
-	swordPowerUp.setPosition(150, 527);
+	arrow = init.LoadSpriteFromTexture("Assets/WeaponAnimations/", "Arrow", "png");
+	arrow.setScale(1.5, 1.5);
 
-	spellPowerUp = init.LoadSpriteFromTexture("Assets/", "SpellPowerUp", "png");
-	spellPowerUp.setPosition(600, 527);
+	swordPowerUp = init.LoadSpriteFromTexture("Assets/Objects/", "SwordPowerUp", "png");
+	swordPowerUp.setPosition(600, 527); 
 
-	bowPowerUp = init.LoadSpriteFromTexture("Assets/", "BowPowerUp", "png");
-	bowPowerUp.setPosition(750, 527);
+	spellPowerUp = init.LoadSpriteFromTexture("Assets/Objects/", "SpellPowerUp", "png");
+	spellPowerUp.setPosition(150, 527);
+
+	bowPowerUp = init.LoadSpriteFromTexture("Assets/Objects/", "BowPowerUp", "png");
+	bowPowerUp.setPosition(250, 527);
 
 }
 
@@ -145,12 +151,14 @@ int main()
 	sf::Clock animationClock;
 	float animationDelay = 0.04f;
 
-	Sprite gameScreen, playButton, exitButton, startButton, instructionMenu, background, healthPotion, chest, grass, fireBall, swordPowerUp, spellPowerUp, bowPowerUp;
-	Init(gameScreen, playButton, exitButton, startButton, instructionMenu, background, healthPotion, chest, grass, fireBall, swordPowerUp, spellPowerUp, bowPowerUp);
+	int currentHealth = 3;
+
+	Sprite gameScreen, playButton, exitButton, startButton, instructionMenu, background, health, healthPotion, chest, grass, fireBall, arrow, swordPowerUp, spellPowerUp, bowPowerUp;
+	Init(gameScreen, playButton, exitButton, startButton, instructionMenu, background, health, healthPotion, chest, grass, fireBall, arrow, swordPowerUp, spellPowerUp, bowPowerUp);
 
 	sf::Texture playerTexture;
-	playerTexture.loadFromFile("Assets/MainCharacterSheet.png");
-	Player player(&playerTexture, sf::Vector2u(6,6), 0.3f, 100.0f, 10.0f, 475.0f);
+	playerTexture.loadFromFile("Assets/Main Character/MainCharacterSheet.png");
+	Player player(&playerTexture, sf::Vector2u(6,6), 0.3f, 100.0f, sf::Vector2f(10.0f, 475.0f), 200);
 
 	
 	float deltaTime = 0.0f;
@@ -224,6 +232,26 @@ Sprite tiles[1] = {grass};
 		if(event.type == Event::KeyPressed) 
 			{
 				Input(speed.asSeconds(), offsetX, offsetY, fireBall);
+
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.powerUp == 2) //The <Control> Keyboard Key Is Pressed...
+						{
+						powerUp = true;
+						fireBallLocation.x = player.GetPosition().x -50;
+						fireBallLocation.y = player.GetPosition().y +20;
+						fireBall.setPosition(fireBallLocation.x,fireBallLocation.y);
+						}
+					else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && player.powerUp == 3) //The <Control> Keyboard Key Is Pressed...
+						{
+						powerUp = true;
+						arrowLocation.x = player.GetPosition().x;
+						arrowLocation.y = player.GetPosition().y +27;
+						arrow.setPosition(arrowLocation.x,arrowLocation.y);
+						}
+				/*if(Keyboard::isKeyPressed(Keyboard::W))
+				{
+					player.Jump(500.0f);
+					cout << "W key is pressed" << endl;
+				}*/
 			}
 		}
 		window.clear();
@@ -245,25 +273,6 @@ Sprite tiles[1] = {grass};
 			window.draw(background);
 			player.Draw(window);
 
-		
-		if (fireBallBool && player.powerUp == 2)
-			{
-			fireBall.setPosition(player.mainCharacter.getGlobalBounds().left +25, player.mainCharacter.getGlobalBounds().top + 45);
-			window.draw(fireBall);
-			if (animationClock.getElapsedTime().asSeconds() > animationDelay)
-				{
-				fireBallLocation.x = fireBallLocation.x + 50;
-				fireBall.setPosition (fireBallLocation.x, fireBallLocation.y);
-				animationClock.restart();
-				}
-			if (fireBallLocation.x > 810)
-				{
-					fireBallLocation.x = (player.mainCharacter.getGlobalBounds().left);
-				fireBallBool = false;
-				}
-			}
-		
-
 			for(i = 0; i<20; i++) 
 			{
 				for(j = 0; j<25; j++)
@@ -279,6 +288,7 @@ Sprite tiles[1] = {grass};
 			{
 				swordPowerUp.setColor(Color(0,0,0,0));
 				swordPowerUp.setPosition (-50,-50);
+			
 			}
 			else if (player.intersects(spellPowerUp, 2, false))
 			{
@@ -292,20 +302,55 @@ Sprite tiles[1] = {grass};
 			}
 
 			player.Update(deltaTime, &playerTexture, sf::Vector2u(6,5), 0.3f, 100.0f);
+
+			view.reset(sf::FloatRect(0, 0, 800, 600));
+				//(sf::Vector2f(0.0f,0.0f), sf::Vector2f(800, 600));
 			view.setCenter(player.GetPosition()); //setting the 2D camera to the main character
+			view.move(0,-150);
 			window.setView(view); //calling the 2D view in
 			window.draw(healthPotion);
 			window.draw(chest);
-
-
 				window.draw(swordPowerUp);
-				window.draw(spellPowerUp);
-				window.draw(bowPowerUp);
-
-
+			window.draw(spellPowerUp);
+			window.draw(bowPowerUp);
+			window.draw(health);
 			player.Draw(window);
 			//window.draw(gameCharacter.GetSprite());
 			//cout << powerUpDisplay << endl;
+
+
+			if (powerUp && player.powerUp == 2)
+			{
+			fireBall.setPosition(fireBallLocation.x,fireBallLocation.y);
+				window.draw(fireBall);
+			if (animationClock.getElapsedTime().asSeconds() > animationDelay)
+				{
+				fireBallLocation.x = fireBallLocation.x + 50;
+				animationClock.restart();
+				}
+			if (fireBallLocation.x > 810)
+				{
+					//fireBall.setPosition(fireBallLocation.x,fireBallLocation.y);
+					powerUp = false;
+				}
+			}
+
+		if (powerUp && player.powerUp == 3)
+			{
+			arrow.setPosition(arrowLocation.x,arrowLocation.y);
+				window.draw(arrow);
+			if (animationClock.getElapsedTime().asSeconds() > animationDelay)
+				{
+				arrowLocation.x = arrowLocation.x + 50;
+				animationClock.restart();
+				}
+			if (arrowLocation.x > 810)
+				{
+					//arrow.setPosition(arrowLocation.x,arrowLocation.y);
+					powerUp = false;
+				}
+			}
+
 		}
 	else if (CURRENT_SCREEN == GAME_OVER_SCREEN)
 		{
@@ -315,9 +360,7 @@ Sprite tiles[1] = {grass};
 				CURRENT_SCREEN = LEVEL_1_SCREEN;
 			}
 		}
-	//cout<<Mouse::getPosition(window).x <<' '<<Mouse::getPosition(window).y <<'\n';
-	//cout << knight.getPosition().x << knight.getPosition().y << "\n";
-	
+
 		window.display();
 	}
 	return 0;
