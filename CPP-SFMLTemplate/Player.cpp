@@ -1,24 +1,18 @@
 #include "Player.h"
 #include <iostream>
 
-Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f Position, float Mass) :
+Player::Player(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, sf::Vector2f Position, float jumpHeight) :
 	animation(texture, imageCount, switchTime)
 {
 		this->speed = speed;
+		this->jumpHeight = jumpHeight;
 		row = 0;
 		faceRight = true;
 
-		JumpCount = 0;
-		mainCharacterGravity = 8.0f;
-		mainCharacterPosition = Position;
-		mainCharacterMass = Mass;
-		mainCharacterOnGround = false;
-
 		mainCharacter.setSize(sf::Vector2f(94.0f,120.0f));
-		mainCharacter.setOrigin(50/2,37/2);
+		mainCharacter.setOrigin(mainCharacter.getSize() / 2.0f);
 		mainCharacter.setPosition(Position);
 		mainCharacter.setTexture(texture);
-
 }
 
 
@@ -28,43 +22,30 @@ Player::~Player(void)
 
 void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed) 
 {
-	
-	//Local Variables
-	int GroundLevel = 570;
-
-//Main "Update()"
-	mainCharacterVelocity -= mainCharacterMass * mainCharacterGravity * speed;
-	mainCharacterPosition.y -= mainCharacterVelocity * speed;
-	mainCharacterSprite.setPosition(mainCharacterPosition);
-	if (mainCharacterPosition.y >= (GroundLevel * 0.75f))
-		{
-		mainCharacterPosition.y = GroundLevel * 0.75f;
-		mainCharacterVelocity = 0;
-		mainCharacterOnGround = true;
-		JumpCount = 0;
-		}
-
-	//Local Variables
-	sf::Vector2f movement(0.0f, 0.0f);
 	bool cantMove = false;
+
+	velocity.x = 0.0f;
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 		{
-				movement.x -= speed * deltaTime;
+				velocity.x -= speed;
 		}
 	else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
 		{
 		if(!cantMove)
 			{
-				movement.x += speed * deltaTime;
+				velocity.x += speed;
 			}
 		}
-		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W));
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && canJump);
 		{
-			Jump(500.0f);
+			canJump = false;
+			velocity.y = sqrtf(2.0f * 981.0f * jumpHeight);
 		}
+
+		velocity.y += 981.0f * deltaTime;
 		
-	if(movement.x == 0.0f)
+	if(velocity.x == 0.0f)
 		{
 			row = 0;	
 			cantMove = true;
@@ -72,7 +53,7 @@ void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCou
 		else
 		{
 			row = 1;
-	if (movement.x > 0.0f)
+	if (velocity.x > 0.0f)
 		{
 			faceRight = true;
 			cantMove = false;
@@ -104,28 +85,41 @@ void Player::Update(float deltaTime, sf::Texture* texture, sf::Vector2u imageCou
 
 		else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 		{
-			if(movement.x == 0.0f)
+			if(velocity.x == 0.0f)
 			{
 				row = 4;
 			}
 		}
-	
+		std::cout << canJump << std::endl;
 		animation.Update(row, deltaTime, faceRight);
 		mainCharacter.setTextureRect(animation.uvRect);
-		mainCharacter.move(movement);
-
-
-
+		mainCharacter.move(velocity * deltaTime);
 }
-void Player::Jump(float velocity)
+
+void Player::OnCollision(sf::Vector2f direction)
 {
-	//Main "Jump()"
-	if (JumpCount < 2)
-		{
-		JumpCount++;
-		mainCharacterVelocity = velocity;
-		mainCharacterOnGround = false;
-		}
+	if(direction.x < 0.0f)
+	{
+		//Collision on the left.
+		velocity.x = 0.0f;
+	}
+	else if(direction.x > 0.0f)
+	{
+		//Collision on the right.
+		velocity.x = 0.0f;
+	}
+	if(direction.y < 0.0f)
+	{
+		//Collision on the bottom.
+		velocity.y = 0.0f;
+		canJump = true;
+	}
+	else if(direction.y > 0.0f)
+	{
+		//collision on the top
+		velocity.y = 0.0f;
+	}
+
 }
 
 bool Player::intersects(sf::Sprite sprite, int type, bool powerUpDisplay)

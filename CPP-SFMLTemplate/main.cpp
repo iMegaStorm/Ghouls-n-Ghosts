@@ -1,9 +1,12 @@
 //Updated 23/02/2020
 
 #include <iostream>
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Initialise.h"
 #include "Player.h"
+#include "Platform.h"
+#include "EnemyBullet.h"
 
 //Compiler Directives
 using namespace std;
@@ -25,6 +28,9 @@ int level = 1;
 int offsetX = 0;
 int offsetY = 0;
 
+	//The "Enemy Bullets" Variables...
+	std::vector<EnemyBullet*> EnemyBullets;
+		void ShootBullets();
 
 Vector2i MouseCursorLocation(0,0);
 
@@ -88,6 +94,7 @@ void Input (float speed, int offsetX, int offsetY, Sprite &fireBall)
 	//	}
 }
 
+
 void Init (Sprite &gameScreen, Sprite &playButton, Sprite &exitButton, Sprite &startButton, Sprite &instructionMenu,Sprite &background, Sprite &health,
 Sprite &healthPotion, Sprite &chest, Sprite &grass, Sprite &fireBall, Sprite &arrow, Sprite &swordPowerUp, Sprite &spellPowerUp, Sprite &bowPowerUp)
 {
@@ -141,7 +148,7 @@ Sprite &healthPotion, Sprite &chest, Sprite &grass, Sprite &fireBall, Sprite &ar
 
 int main()
 {
-//Local Variables
+//Local Variable
 	//Event Variables
 	Event event;
 	//Local Variables
@@ -160,6 +167,10 @@ int main()
 	playerTexture.loadFromFile("Assets/Main Character/MainCharacterSheet.png");
 	Player player(&playerTexture, sf::Vector2u(6,6), 0.3f, 100.0f, sf::Vector2f(10.0f, 475.0f), 200);
 
+	std::vector<Platform> platforms;
+	//platforms.push_back(Platform(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f)));
+	//platforms.push_back(Platform(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 0.0f)));
+	platforms.push_back(Platform(nullptr, sf::Vector2f(1000.0f, 32.0f), sf::Vector2f(500.0f, 600.0f)));
 	
 	float deltaTime = 0.0f;
 	sf::Clock clock;
@@ -199,6 +210,9 @@ Sprite tiles[1] = {grass};
 	while (window.isOpen()) //The Game Window Loop
 	{
 		deltaTime = ClockTime.restart().asSeconds();
+		if(deltaTime > 1.0f / 20.0f)
+			deltaTime = 1.0f / 20.0f;
+
 		Input(speed.asSeconds(),offsetX, offsetY, fireBall);
 		while (window.pollEvent(event)) //Checks for input for keyboard
 		{
@@ -244,7 +258,7 @@ Sprite tiles[1] = {grass};
 						{
 						powerUp = true;
 						arrowLocation.x = player.GetPosition().x;
-						arrowLocation.y = player.GetPosition().y +27;
+						arrowLocation.y = player.GetPosition().y; //+27
 						arrow.setPosition(arrowLocation.x,arrowLocation.y);
 						}
 				/*if(Keyboard::isKeyPressed(Keyboard::W))
@@ -303,6 +317,12 @@ Sprite tiles[1] = {grass};
 
 			player.Update(deltaTime, &playerTexture, sf::Vector2u(6,5), 0.3f, 100.0f);
 
+			sf::Vector2f direction;
+
+			for(Platform& platform : platforms)
+				if(platform.GetCollider().CheckCollision(player.GetCollider(), direction , 1.0f))
+					player.OnCollision(direction);
+
 			view.reset(sf::FloatRect(0, 0, 800, 600));
 				//(sf::Vector2f(0.0f,0.0f), sf::Vector2f(800, 600));
 			view.setCenter(player.GetPosition()); //setting the 2D camera to the main character
@@ -315,6 +335,9 @@ Sprite tiles[1] = {grass};
 			window.draw(bowPowerUp);
 			window.draw(health);
 			player.Draw(window);
+			
+			for(Platform& platform : platforms)
+			platform.Draw(window);
 			//window.draw(gameCharacter.GetSprite());
 			//cout << powerUpDisplay << endl;
 
@@ -364,4 +387,14 @@ Sprite tiles[1] = {grass};
 		window.display();
 	}
 	return 0;
+}
+
+void ShootBullets()
+{
+//Local Variables
+	Player &player
+//Main "ShootBullets()"
+	//EnemyBullet* Bullets = new EnemyBullet();
+	//Bullets -> Init("Assets/EnemyBullet.png",player.GetPosition().x;
+	//EnemyBullets.push_back(Bullets);
 }

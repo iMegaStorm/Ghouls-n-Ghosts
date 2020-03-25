@@ -45,7 +45,7 @@ void Animation::Update(int row, float deltaTime, bool faceRight)
 		//	currentImage.x = 0;
 		//}
 	}
-	std::cout << currentImage.x << std::endl;
+	//std::cout << currentImage.x << std::endl;
 
 	uvRect.top = currentImage.y * uvRect.height;
 
